@@ -30,7 +30,8 @@ double evaluate(unordered_map<string, vector<pair<string, double>>> &graph, vect
         for (auto nodeObj: graph[currNode]) {
             auto node = nodeObj.first;
             auto weight = nodeObj.second;
-            if (visited.insert(node).second) {
+            if (visited.find(node)==visited.end()) {
+                visited.insert(node);
                 que.push({node, currValue * weight});
             }
         }
