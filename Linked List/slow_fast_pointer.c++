@@ -23,3 +23,15 @@ ListNode* removeNthFromEnd(ListNode* head, int n) {
     slow->next = slow->next->next;
     return head;
 }
+
+
+
+
+/*
+middle node for even list:-
+    slow = fast = head;  
+    n -> n -> (n) -> n
+
+    slow = head; fast = head->next;
+    n -> (n) -> n -> n
+*/
