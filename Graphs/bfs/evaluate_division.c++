@@ -1,59 +1,62 @@
-void dfs(unordered_map<string, vector<pair<string, double>>> &adj, string src, string dst, unordered_set<string>& visited, double product, double &ans) {
-    if(visited.find(src) != visited.end())
-        return;
+double evaluate(unordered_map<string, vector<pair<string, double>>> &graph, vector<string> &query) {
+    auto startNode = query[0];
+    auto endNode = query[1];
     
-    visited.insert(src);
-    if(src == dst) {
-        ans = product;
-        return;
+    if (graph.find(startNode) == graph.end()) {
+        return -1;
     }
     
-    for(auto p : adj[src]) {
-        
-        string v = p.first;
-        double val = p.second;
-        
-        dfs(adj, v, dst, visited, product*val, ans);
-            
-    }
-}
-
-vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-    int n = equations.size();
-    
-    unordered_map<string, vector<pair<string, double>>> adj;
-    
-    for(int i = 0; i<n; i++) {
-        
-        string u = equations[i][0];
-        string v = equations[i][1];
-        double val = values[i];
-        
-        adj[u].push_back({v, val});        //To handle a/c
-        adj[v].push_back({u, 1.0/val});    //To handle c/a
+    if (graph.find(endNode) == graph.end()) {
+        return -1;
     }
     
-    vector<double> result;
+    queue<pair<string, double>> que;
+    unordered_set<string> visited;
     
-    for(auto &query : queries) {
+    que.push({startNode, 1});
+    visited.insert(startNode);
+    
+    while (!que.empty()) {
+        auto frontItem = que.front();
+        que.pop();
         
-        string src = query[0];
-        string dst = query[1];
+        auto currNode = frontItem.first;
+        auto currValue = frontItem.second;
         
-        double ans = -1.0;
-        double product = 1.0;
-        
-        
-        if(adj.find(src) != adj.end()) {
-            unordered_set<string> visited;
-            
-            dfs(adj, src, dst, visited, product, ans);
-            
+        if (currNode == endNode) {
+            return currValue;
         }
         
-        result.push_back(ans);
-        
+        for (auto nodeObj: graph[currNode]) {
+            auto node = nodeObj.first;
+            auto weight = nodeObj.second;
+            if (visited.insert(node).second) {
+                que.push({node, currValue * weight});
+            }
+        }
     }
     
-    return result;
+    return -1;
+}
+
+public:
+vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
+    
+    unordered_map<string, vector<pair<string, double>>> graph;
+    for (int i = 0; i < equations.size(); i++) {
+        auto fromNode = equations[i][0];
+        auto toNode = equations[i][1];
+        double weight = values[i];
+        
+        graph[fromNode].push_back({toNode, weight});
+        graph[toNode].push_back({fromNode, 1 / weight});
+    }
+    
+    vector<double> answers;
+    
+    for (auto query: queries) {
+        answers.push_back(evaluate(graph, query));
+    }
+    
+    return answers;
 }
