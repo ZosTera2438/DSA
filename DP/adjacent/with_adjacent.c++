@@ -1,7 +1,7 @@
 // frog with 'k' jumps 
 
 int solveUtil(int ind, vector<int>& height, vector<int>& dp, int k) {
-    // Base case: If we are at the beginning (index 0), no cost is needed.
+    // Base case: If at the beginning (index 0), no cost is needed.
     if (ind == 0) return 0;
     
     if (dp[ind] != -1) return dp[ind];

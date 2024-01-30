@@ -6,11 +6,11 @@ int lcsUtil(string& s1, string& s2, int ind1, int ind2, vector<vector<int>>& dp)
     if (dp[ind1][ind2] != -1)
         return dp[ind1][ind2];
 
-    // If the characters at the current indices match, increment the LCS length
+    // match, increment the LCS length
     if (s1[ind1] == s2[ind2])
         return dp[ind1][ind2] = 1 + lcsUtil(s1, s2, ind1 - 1, ind2 - 1, dp);
     else
-        // If the characters don't match, consider two options: moving either left or up in the strings
+        // not match, consider options: moving either left or up in the strings
         return dp[ind1][ind2] = max(lcsUtil(s1, s2, ind1, ind2 - 1, dp), lcsUtil(s1, s2, ind1 - 1, ind2, dp));
 }
 
@@ -21,3 +21,9 @@ int lcs(string s1, string s2) {
     vector<vector<int>> dp(n, vector<int>(m, -1));
     return lcsUtil(s1, s2, n - 1, m - 1, dp);
 }
+
+
+
+// match, not match
+// replace, edit
+// comparison
